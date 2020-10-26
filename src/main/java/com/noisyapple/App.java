@@ -1,24 +1,13 @@
 package com.noisyapple;
 
 import java.util.Arrays;
+import java.util.Stack;
 
 public class App {
 
     public static void main(String[] args) {
 
         String[] cases = {"10", "010110", "", "01"};
-
-        // String[] states = {"q0", "q1"}; // Q.
-        // String alphabet = "01"; // Sigma.
-        // String startS = "q0"; // q0.
-        // Transition[] transitions = {new Transition("q0", '0', "q1"),
-        // new Transition("q1", '0', "q0"), new Transition("q1", '1', "q1")}; // Delta.
-        // String[] acceptStates = {"q1", "q0"}; // F.
-
-        // DFA M = new DFA(states, alphabet, startS, transitions, acceptStates);
-
-        // System.out.println(M.toString());
-        // System.out.println(M.evaluate("011"));
 
         String alphabet = "01"; // Sigma.
 
@@ -52,6 +41,45 @@ public class App {
             System.out.println("M1 => " + M1.evaluate(c));
             System.out.println("M2 => " + M2.evaluate(c) + "\n");
         }
+
+        Stack<StateTuple[]> data = DFA.areEquivalent(M1, M2);
+
+        for (StateTuple[] row : data) {
+            System.out.println(Arrays.toString(row));
+        }
+
+        // System.out.println("\n\n");
+
+        // String alphabet2 = "ab"; // Sigma.
+
+        // String[] Q_1 = {"q0", "q1", "q2"}; // Q.
+        // String q0__1 = "q0"; // q0.
+        // Transition[] trans__1 = {new Transition("q0", 'a', "q2"), new Transition("q0", 'b',
+        // "q1"),
+        // new Transition("q1", 'a', "q1"), new Transition("q1", 'b', "q1"),
+        // new Transition("q2", 'a', "q0"), new Transition("q2", 'b', "q1")}; // Delta.
+        // String[] F_1 = {"q0", "q2"}; // F.
+
+        // DFA M_1 = new DFA(Q_1, alphabet2, q0__1, trans__1, F_1); // (0+1)*10
+
+        // String[] Q_2 = {"r0", "r1"}; // Q.
+        // String q0__2 = "r0"; // q0.
+        // Transition[] trans__2 = {new Transition("r0", 'a', "r0"), new Transition("r0", 'b',
+        // "r1"),
+        // new Transition("r1", 'a', "r1"), new Transition("r1", 'b', "r1")}; // Delta.
+        // String[] F_2 = {"r0"}; // F.
+
+        // DFA M_2 = new DFA(Q_2, alphabet2, q0__2, trans__2, F_2); // (0+1)*10
+
+        // System.out.println(M_1.toString());
+        // System.out.println(M_2.toString());
+
+        // Stack<StateTuple[]> data2 = DFA.areEquivalent(M_1, M_2);
+
+        // for (StateTuple[] row : data2) {
+        // System.out.println(Arrays.toString(row));
+        // }
+
     }
 
 }
