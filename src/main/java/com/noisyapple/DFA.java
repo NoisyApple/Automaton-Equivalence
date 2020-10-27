@@ -21,6 +21,14 @@ public class DFA {
         this.acceptStates = acceptStates;
     }
 
+    public DFA() {
+        this.states = new String[] {};
+        this.alphabet = "";
+        this.startS = "";
+        this.transitions = new Transition[] {};
+        this.acceptStates = new String[] {};
+    }
+
     // Evaluates a sequence with the automaton.
     public boolean evaluate(String sequence) {
 
@@ -175,8 +183,50 @@ public class DFA {
         return dataStack;
     }
 
+    // GETTERS +++
     public String[] getStates() {
         return states;
     }
+
+    public String getAlphabet() {
+        return alphabet;
+    }
+
+    public String getStartS() {
+        return startS;
+    }
+
+    public Transition[] getTransitions() {
+        return transitions;
+    }
+
+    public String[] getAcceptStates() {
+        return acceptStates;
+    }
+    // GETTERS ---
+
+    // SETTERS +++
+    public void setStates(String[] states) {
+        this.states = states;
+    }
+
+    public void setAlphabet(String alphabet) {
+        this.alphabet = alphabet;
+    }
+
+    public void setStartS(String startS) {
+        this.startS = startS;
+    }
+
+    public void setTransitions(Transition[] transitions) {
+        this.transitions = transitions;
+    }
+
+    public void setAcceptStates(String[] acceptStates) {
+        this.acceptStates = acceptStates;
+    }
+    // SETTERS ---
+
+
 
 }

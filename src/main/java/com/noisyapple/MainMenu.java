@@ -2,11 +2,14 @@ package com.noisyapple;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +17,11 @@ import javax.swing.border.EmptyBorder;
 @SuppressWarnings("serial")
 public class MainMenu extends JFrame {
 
+    // Logic attributes.
+    private DFA m1, m2;
+    private String commonAlphabet;
+
+    // Graphic attributes.
     private JPanel mainPanel, alphabetPanel, m1Panel, m2Panel, m1StatesPanel, m2StatesPanel,
             m1TransitionsPanel, m2TransitionsPanel, bottomPanel;
     private JButton btnAlphabet, btnM1States, btnM2States, btnM1Transitions, btnM2Transitions,
@@ -21,6 +29,9 @@ public class MainMenu extends JFrame {
     private JLabel lblAlphabet, lblM1States, lblM2States, lblM1Transitions, lblM2Transitions;
 
     public MainMenu() {
+
+        m1 = new DFA();
+        m2 = new DFA();
 
         mainPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -51,10 +62,39 @@ public class MainMenu extends JFrame {
         btnCompare = new JButton("COMPARE");
         btnReset = new JButton("RESET");
 
+        addListeners();
         addAttributes();
         build();
         launch();
 
+    }
+
+    public void addListeners() {
+
+        // ALPHABET BUTTON CLICK EVENT +++
+        btnAlphabet.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                commonAlphabet = JOptionPane.showInputDialog(null, "Enter an alphabet:");
+
+                m1.setAlphabet(commonAlphabet);
+                m2.setAlphabet(commonAlphabet);
+            }
+        });
+        // ALPHABET BUTTON CLICK EVENT ---
+
+        // STATES BUTTON CLICK EVENT +++
+        btnM1States.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new StatesMenu(m1, btnM1States);
+            }
+        });
+
+        btnM2States.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new StatesMenu(m2, btnM2States);
+            }
+        });
+        // STATES BUTTON CLICK EVENT ---
     }
 
     public void addAttributes() {
