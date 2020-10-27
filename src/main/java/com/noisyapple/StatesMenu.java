@@ -29,12 +29,18 @@ public class StatesMenu extends JFrame {
     private ArrayList<StateRow> states;
     private JPanel mainPanel, bottomPanel, statesListPanel;
     private JScrollPane statesListScroll;
-    private JButton btnAdd, handler;
+    private JButton btnAdd;
 
-    public StatesMenu(DFA m, JButton handler) {
+    // Main menu elements.
+    private JButton btnHandler, btnReset;
+    private JLabel lblHandler;
+
+    public StatesMenu(DFA m, JButton btnHandler, JLabel lblHandler, JButton btnReset) {
 
         this.m = m; // Automaton.
-        this.handler = handler; // Handler button.
+        this.btnHandler = btnHandler; // Handler button.
+        this.lblHandler = lblHandler; // Handler label.
+        this.btnReset = btnReset; // Reset button.
 
         mainPanel = new JPanel(new BorderLayout(10, 10));
 
@@ -43,14 +49,13 @@ public class StatesMenu extends JFrame {
         bottomPanel = new JPanel();
         btnAdd = new JButton("ADD");
 
-        handler.setEnabled(false);
+        btnHandler.setEnabled(false); // Handler is disabled while window is open.
 
         addListeners();
         addAttributes();
         updateStates();
         build();
         launch();
-
     }
 
     public void addListeners() {
@@ -59,18 +64,19 @@ public class StatesMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 // New state from input.
-                String newS = JOptionPane.showInputDialog(null, "Enter the new state:");
+                String newS = JOptionPane.showInputDialog(null, "Enter the new state:", "New state",
+                        JOptionPane.PLAIN_MESSAGE);
 
                 // Checks if state already exists.
                 boolean alreadyExists = Arrays.stream(m.getStates()).anyMatch(s -> s.equals(newS));
 
                 // Filters only valid new states.
                 if (newS != null && newS.length() > 0 && !alreadyExists) {
-                    String[] states = m.getStates();
-                    String[] newStates = new String[states.length + 1];
+                    String[] actualStates = m.getStates();
+                    String[] newStates = new String[actualStates.length + 1];
 
-                    for (int i = 0; i < states.length; i++)
-                        newStates[i] = states[i];
+                    for (int i = 0; i < actualStates.length; i++)
+                        newStates[i] = actualStates[i];
 
                     newStates[newStates.length - 1] = newS;
 
@@ -81,18 +87,24 @@ public class StatesMenu extends JFrame {
 
             }
         });
-
         // ADD BUTTON CLICK EVENT ---
 
         // WINDOW CLOSE EVENT +++
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent evt) {
-                handler.setEnabled(true);
+                btnHandler.setEnabled(true); // Enables hanler when window is closed.
+
+                if (m.getStates().length > 0) {
+                    lblHandler
+                            .setText("<html><span style='color: #5bb62d'>States set.</span><html>");
+                    btnReset.setEnabled(true);
+                }
             }
         });
         // WINDOW CLOSE EVENT ---
     }
 
+    // Adds attributes to graphic elements.
     public void addAttributes() {
         setTitle("States menu");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -102,8 +114,8 @@ public class StatesMenu extends JFrame {
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
     }
 
+    // Builds the GUI.
     public void build() {
-
         bottomPanel.add(btnAdd);
 
         mainPanel.add(statesListScroll, BorderLayout.CENTER);
@@ -112,31 +124,34 @@ public class StatesMenu extends JFrame {
         add(mainPanel);
     }
 
+    // Launches the window.
     public void launch() {
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
+    // Loads all StateRow objects based on automaton data.
     public void updateStates() {
         states = new ArrayList<StateRow>();
         statesListPanel = new JPanel();
 
         statesListPanel.setLayout(new BoxLayout(statesListPanel, BoxLayout.Y_AXIS));
 
+        // Takes all states from the automaton and adds them to the StateRow ArrayList.
         for (String s : m.getStates())
             states.add(new StateRow(s));
 
+        // Sets background to each StateRow and adds them to the list.
         for (int i = 0; i < states.size(); i++) {
             states.get(i).setListBackground(i);
             statesListPanel.add(states.get(i));
         }
 
         statesListScroll.getViewport().setView(statesListPanel);
-
-        System.out.println(m);
     }
 
+    // Custom element to represent each state of the automaton and its properties.
     class StateRow extends JPanel {
 
         // Logic attributes.
@@ -227,7 +242,7 @@ public class StatesMenu extends JFrame {
             // ACCEPT STATE CHECKBOX CHECK EVENT +++
         }
 
-
+        // Set the state of GUI elements based on the state.
         public void configureElements() {
             if (m.getStartS() == state) {
                 cBxStartState.setSelected(true);

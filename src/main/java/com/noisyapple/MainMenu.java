@@ -19,7 +19,6 @@ public class MainMenu extends JFrame {
 
     // Logic attributes.
     private DFA m1, m2;
-    private String commonAlphabet;
 
     // Graphic attributes.
     private JPanel mainPanel, alphabetPanel, m1Panel, m2Panel, m1StatesPanel, m2StatesPanel,
@@ -37,31 +36,32 @@ public class MainMenu extends JFrame {
 
         alphabetPanel = new JPanel();
         btnAlphabet = new JButton("ALPHABET");
-        lblAlphabet = new JLabel("No alphabet set.");
+        lblAlphabet = new JLabel();
 
         m1Panel = new JPanel();
         m2Panel = new JPanel();
 
         m1StatesPanel = new JPanel();
         btnM1States = new JButton("STATES");
-        lblM1States = new JLabel("No states set.");
+        lblM1States = new JLabel();
 
         m2StatesPanel = new JPanel();
         btnM2States = new JButton("STATES");
-        lblM2States = new JLabel("No states set.");
+        lblM2States = new JLabel();
 
         m1TransitionsPanel = new JPanel();
         btnM1Transitions = new JButton("TRANSITIONS");
-        lblM1Transitions = new JLabel("No transitions set.");
+        lblM1Transitions = new JLabel();
 
         m2TransitionsPanel = new JPanel();
         btnM2Transitions = new JButton("TRANSITIONS");
-        lblM2Transitions = new JLabel("No transitions set.");
+        lblM2Transitions = new JLabel();
 
         bottomPanel = new JPanel();
         btnCompare = new JButton("COMPARE");
         btnReset = new JButton("RESET");
 
+        defaultState();
         addListeners();
         addAttributes();
         build();
@@ -69,15 +69,40 @@ public class MainMenu extends JFrame {
 
     }
 
+    public void defaultState() {
+        m1 = new DFA();
+        m2 = new DFA();
+
+        lblAlphabet.setText("<html><span style='color: #d02d3d'>No alphabet set.</span><html>");
+        lblM1States.setText("<html><span style='color: #d02d3d'>No states set.</span><html>");
+        lblM2States.setText("<html><span style='color: #d02d3d'>No states set.</span><html>");
+        lblM1Transitions
+                .setText("<html><span style='color: #d02d3d'>No transitions set.</span><html>");
+        lblM2Transitions
+                .setText("<html><span style='color: #d02d3d'>No transitions set.</span><html>");
+
+        btnReset.setEnabled(false);
+    }
+
     public void addListeners() {
 
         // ALPHABET BUTTON CLICK EVENT +++
         btnAlphabet.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                commonAlphabet = JOptionPane.showInputDialog(null, "Enter an alphabet:");
+                String commonAlphabet = JOptionPane.showInputDialog(null, "Enter an alphabet:",
+                        "New alphabet", JOptionPane.PLAIN_MESSAGE);
 
-                m1.setAlphabet(commonAlphabet);
-                m2.setAlphabet(commonAlphabet);
+
+                if (commonAlphabet != null) {
+                    m1.setAlphabet(commonAlphabet);
+                    m2.setAlphabet(commonAlphabet);
+
+                    lblAlphabet.setText(
+                            "<html><span style='color: #5bb62d'>Alphabet set.</span><html>");
+
+                    btnReset.setEnabled(true);
+                }
+
             }
         });
         // ALPHABET BUTTON CLICK EVENT ---
@@ -85,16 +110,38 @@ public class MainMenu extends JFrame {
         // STATES BUTTON CLICK EVENT +++
         btnM1States.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new StatesMenu(m1, btnM1States);
+                new StatesMenu(m1, btnM1States, lblM1States, btnReset);
             }
         });
 
         btnM2States.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new StatesMenu(m2, btnM2States);
+                new StatesMenu(m2, btnM2States, lblM2States, btnReset);
             }
         });
         // STATES BUTTON CLICK EVENT ---
+
+        // TRANSITION BUTTON CLICK EVENT +++
+        btnM1Transitions.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new TransitionsMenu(m1, btnM1Transitions, lblM1Transitions);
+            }
+        });
+
+        btnM2Transitions.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                new TransitionsMenu(m2, btnM2Transitions, lblM2Transitions);
+            }
+        });
+        // TRANSITION BUTTON CLICK EVENT ---
+
+        // RESET BUTTON CLICK EVENT +++
+        btnReset.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                defaultState();
+            }
+        });
+        // RESET BUTTON CLICK EVENT ---
     }
 
     public void addAttributes() {

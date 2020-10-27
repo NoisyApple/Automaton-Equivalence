@@ -38,7 +38,7 @@ public class DFA {
         while (sequence.length() > 0) {
 
             // Sets the actual state based on the transition's finalState or the start state.
-            String actualState = (transition != null) ? transition.finalState : startS;
+            String actualState = (transition != null) ? transition.getFinalState() : startS;
             char actualCharacter = sequence.charAt(0);
 
             // Try catch block prevents array index out of bounds error.
@@ -46,8 +46,9 @@ public class DFA {
 
                 // Filters the array of transitions to get the transition which has the same origin
                 // state and transition value.
-                transition = Arrays.stream(transitions).filter(
-                        t -> t.originState == actualState && t.transitionValue == actualCharacter)
+                transition = Arrays.stream(transitions)
+                        .filter(t -> t.getOriginState() == actualState
+                                && t.getTransitionValue() == actualCharacter)
                         .toArray(Transition[]::new)[0];
 
                 sequence = sequence.substring(1);
@@ -61,7 +62,7 @@ public class DFA {
 
         // A null transition at this part of the algorithm means that an empty sequence was passed.
         // Otherwise the last state will be the final state of the actual transition.
-        String lastState = (transition != null) ? transition.finalState : startS;
+        String lastState = (transition != null) ? transition.getFinalState() : startS;
 
         // If the last state matches with one of the values from the accept states then the sequence
         // is accepted, otherwise it is rejected.
@@ -121,17 +122,17 @@ public class DFA {
 
                 // Transition state from origin state (m1State) with actual alphabet symbol.
                 String m1TransState = Arrays.stream(m1.transitions)
-                        .filter(t -> t.originState == m1State
-                                && t.transitionValue == alphabet.charAt(index))
-                        .toArray(Transition[]::new)[0].finalState;
+                        .filter(t -> t.getOriginState() == m1State
+                                && t.getTransitionValue() == alphabet.charAt(index))
+                        .toArray(Transition[]::new)[0].getFinalState();
 
                 String m2State = lastTuple.getRightState(); // State from m2.
 
                 // Transition state from origin state (m2State) with actual alphabet symbol.
                 String m2TransState = Arrays.stream(m2.transitions)
-                        .filter(t -> t.originState == m2State
-                                && t.transitionValue == alphabet.charAt(index))
-                        .toArray(Transition[]::new)[0].finalState;
+                        .filter(t -> t.getOriginState() == m2State
+                                && t.getTransitionValue() == alphabet.charAt(index))
+                        .toArray(Transition[]::new)[0].getFinalState();
 
                 // New tuple with found transition states.
                 StateTuple newTuple = new StateTuple(m1TransState, m2TransState);
@@ -226,7 +227,4 @@ public class DFA {
         this.acceptStates = acceptStates;
     }
     // SETTERS ---
-
-
-
 }
