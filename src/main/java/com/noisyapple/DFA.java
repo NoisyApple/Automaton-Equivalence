@@ -175,4 +175,8 @@ public class DFA {
         return dataStack;
     }
 
+    public String[] getStates() {
+        return states;
+    }
+
 }

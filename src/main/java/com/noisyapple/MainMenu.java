@@ -60,6 +60,7 @@ public class MainMenu extends JFrame {
     public void addAttributes() {
         setTitle("Automaton equivalence");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
 
         alphabetPanel.setBorder(BorderFactory.createTitledBorder("Alphabet"));
 
