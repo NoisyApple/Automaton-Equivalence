@@ -29,9 +29,6 @@ public class MainMenu extends JFrame {
 
     public MainMenu() {
 
-        m1 = new DFA();
-        m2 = new DFA();
-
         mainPanel = new JPanel(new BorderLayout(10, 10));
 
         alphabetPanel = new JPanel();
@@ -70,6 +67,7 @@ public class MainMenu extends JFrame {
     }
 
     public void defaultState() {
+
         m1 = new DFA();
         m2 = new DFA();
 
@@ -135,6 +133,22 @@ public class MainMenu extends JFrame {
         });
         // TRANSITION BUTTON CLICK EVENT ---
 
+        // COMPARE BUTTON CLICK EVENT +++
+        btnCompare.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                try {
+                    new MooreTable(DFA.areEquivalent(m1, m2));
+                } catch (Exception error) {
+                    JOptionPane.showMessageDialog(null,
+                            "<html><span style='color: #d02d3d; font-size: 14px'>M1 and M2 are not equivalent :(</span><html>",
+                            "Not equivalent", JOptionPane.PLAIN_MESSAGE);
+                }
+
+            }
+        });
+        // COMPARE BUTTON CLICK EVENT ---
+
         // RESET BUTTON CLICK EVENT +++
         btnReset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -161,6 +175,11 @@ public class MainMenu extends JFrame {
         lblM1States.setPreferredSize(new Dimension(103, 26));
         btnM2States.setPreferredSize(new Dimension(111, 26));
         lblM2States.setPreferredSize(new Dimension(103, 26));
+
+        btnM1Transitions.setPreferredSize(new Dimension(111, 26));
+        lblM1Transitions.setPreferredSize(new Dimension(103, 26));
+        btnM2Transitions.setPreferredSize(new Dimension(111, 26));
+        lblM2Transitions.setPreferredSize(new Dimension(103, 26));
 
         mainPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 

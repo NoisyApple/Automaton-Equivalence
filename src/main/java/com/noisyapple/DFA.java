@@ -82,9 +82,9 @@ public class DFA {
         return data;
     }
 
-    public static Stack<StateTuple[]> areEquivalent(DFA m1, DFA m2) {
+    public static ArrayList<StateTuple[]> areEquivalent(DFA m1, DFA m2) {
 
-        Stack<StateTuple[]> dataStack = new Stack<StateTuple[]>(); // Visualizable data.
+        ArrayList<StateTuple[]> mooreTable = new ArrayList<StateTuple[]>(); // Visualizable data.
         Stack<StateTuple> closedSet = new Stack<StateTuple>(); // Valid tuples.
         ArrayList<StateTuple> openSet = new ArrayList<StateTuple>(); // Tuples to be evaluated.
 
@@ -92,7 +92,7 @@ public class DFA {
 
         // Both alphabets must be the same.
         if (!m1.alphabet.equals(m2.alphabet))
-            return dataStack;
+            return mooreTable;
 
         // Table header is added.
         StateTuple[] tableHeader = new StateTuple[alphabet.length() + 1];
@@ -101,7 +101,7 @@ public class DFA {
         for (int i = 0; i < alphabet.length(); i++)
             tableHeader[i + 1] = new StateTuple(String.valueOf(alphabet.charAt(i)), "");
 
-        dataStack.push(tableHeader);
+        mooreTable.add(tableHeader);
 
         // First tuple (initial states) is added to both sets.
         closedSet.push(new StateTuple(m1.startS, m2.startS));
@@ -173,15 +173,15 @@ public class DFA {
                     }
 
                 } else {
-                    return new Stack<StateTuple[]>(); // Empty table (not equivalent).
+                    return new ArrayList<StateTuple[]>(); // Empty table (not equivalent).
                 }
 
             }
 
-            dataStack.push(tableRow); // Adds row to dataStack.
+            mooreTable.add(tableRow); // Adds row to mooreTable.
         }
 
-        return dataStack;
+        return mooreTable;
     }
 
     // GETTERS +++
