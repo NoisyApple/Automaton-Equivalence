@@ -21,10 +21,9 @@ public class MainMenu extends JFrame {
     private DFA m1, m2;
 
     // Graphic attributes.
-    private JPanel mainPanel, alphabetPanel, m1Panel, m2Panel, m1StatesPanel, m2StatesPanel,
-            m1TransitionsPanel, m2TransitionsPanel, bottomPanel;
-    private JButton btnAlphabet, btnM1States, btnM2States, btnM1Transitions, btnM2Transitions,
-            btnCompare, btnReset;
+    private JPanel mainPanel, alphabetPanel, m1Panel, m2Panel, m1StatesPanel, m2StatesPanel, m1TransitionsPanel,
+            m2TransitionsPanel, bottomPanel;
+    private JButton btnAlphabet, btnM1States, btnM2States, btnM1Transitions, btnM2Transitions, btnCompare, btnReset;
     private JLabel lblAlphabet, lblM1States, lblM2States, lblM1Transitions, lblM2Transitions;
 
     public MainMenu() {
@@ -74,10 +73,8 @@ public class MainMenu extends JFrame {
         lblAlphabet.setText("<html><span style='color: #d02d3d'>No alphabet set.</span><html>");
         lblM1States.setText("<html><span style='color: #d02d3d'>No states set.</span><html>");
         lblM2States.setText("<html><span style='color: #d02d3d'>No states set.</span><html>");
-        lblM1Transitions
-                .setText("<html><span style='color: #d02d3d'>No transitions set.</span><html>");
-        lblM2Transitions
-                .setText("<html><span style='color: #d02d3d'>No transitions set.</span><html>");
+        lblM1Transitions.setText("<html><span style='color: #d02d3d'>No transitions set.</span><html>");
+        lblM2Transitions.setText("<html><span style='color: #d02d3d'>No transitions set.</span><html>");
 
         btnReset.setEnabled(false);
     }
@@ -87,16 +84,14 @@ public class MainMenu extends JFrame {
         // ALPHABET BUTTON CLICK EVENT +++
         btnAlphabet.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                String commonAlphabet = JOptionPane.showInputDialog(null, "Enter an alphabet:",
-                        "New alphabet", JOptionPane.PLAIN_MESSAGE);
-
+                String commonAlphabet = JOptionPane.showInputDialog(null, "Enter an alphabet:", "New alphabet",
+                        JOptionPane.PLAIN_MESSAGE);
 
                 if (commonAlphabet != null) {
                     m1.setAlphabet(commonAlphabet);
                     m2.setAlphabet(commonAlphabet);
 
-                    lblAlphabet.setText(
-                            "<html><span style='color: #5bb62d'>Alphabet set.</span><html>");
+                    lblAlphabet.setText("<html><span style='color: #5bb62d'>Alphabet set.</span><html>");
 
                     btnReset.setEnabled(true);
                 }

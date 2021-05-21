@@ -6,14 +6,17 @@ import java.util.Stack;
 
 public class DFA {
 
+    public static int NON_ACCEPT_STATE = 0;
+    public static int ACCEPT_STATE = 1;
+    public static int NOT_FOUND_IN_DFA = 2;
+
     private String[] states; // Q.
     private String alphabet; // Sigma.
     private String startS; // q0.
     private Transition[] transitions; // Delta.
     private String[] acceptStates; // F.
 
-    public DFA(String[] states, String alphabet, String startS, Transition[] transitions,
-            String[] acceptStates) {
+    public DFA(String[] states, String alphabet, String startS, Transition[] transitions, String[] acceptStates) {
         this.states = states;
         this.alphabet = alphabet;
         this.startS = startS;
@@ -37,34 +40,38 @@ public class DFA {
         // Iterates through each character from the sequence.
         while (sequence.length() > 0) {
 
-            // Sets the actual state based on the transition's finalState or the start state.
+            // Sets the actual state based on the transition's finalState or the start
+            // state.
             String actualState = (transition != null) ? transition.getFinalState() : startS;
             char actualCharacter = sequence.charAt(0);
 
             // Try catch block prevents array index out of bounds error.
             try {
 
-                // Filters the array of transitions to get the transition which has the same origin
+                // Filters the array of transitions to get the transition which has the same
+                // origin
                 // state and transition value.
                 transition = Arrays.stream(transitions)
-                        .filter(t -> t.getOriginState() == actualState
-                                && t.getTransitionValue() == actualCharacter)
+                        .filter(t -> t.getOriginState() == actualState && t.getTransitionValue() == actualCharacter)
                         .toArray(Transition[]::new)[0];
 
                 sequence = sequence.substring(1);
 
             } catch (Exception e) {
-                // Index out of bounds error means that the actual state doesn't have a transition
+                // Index out of bounds error means that the actual state doesn't have a
+                // transition
                 // with the value of the actual character, therefore the sequence is rejected.
                 return false;
             }
         }
 
-        // A null transition at this part of the algorithm means that an empty sequence was passed.
+        // A null transition at this part of the algorithm means that an empty sequence
+        // was passed.
         // Otherwise the last state will be the final state of the actual transition.
         String lastState = (transition != null) ? transition.getFinalState() : startS;
 
-        // If the last state matches with one of the values from the accept states then the sequence
+        // If the last state matches with one of the values from the accept states then
+        // the sequence
         // is accepted, otherwise it is rejected.
         return Arrays.stream(acceptStates).anyMatch(s -> s.equals(lastState));
     }
@@ -122,46 +129,40 @@ public class DFA {
 
                 // Transition state from origin state (m1State) with actual alphabet symbol.
                 String m1TransState = Arrays.stream(m1.transitions)
-                        .filter(t -> t.getOriginState() == m1State
-                                && t.getTransitionValue() == alphabet.charAt(index))
+                        .filter(t -> t.getOriginState() == m1State && t.getTransitionValue() == alphabet.charAt(index))
                         .toArray(Transition[]::new)[0].getFinalState();
 
                 String m2State = lastTuple.getRightState(); // State from m2.
 
                 // Transition state from origin state (m2State) with actual alphabet symbol.
                 String m2TransState = Arrays.stream(m2.transitions)
-                        .filter(t -> t.getOriginState() == m2State
-                                && t.getTransitionValue() == alphabet.charAt(index))
+                        .filter(t -> t.getOriginState() == m2State && t.getTransitionValue() == alphabet.charAt(index))
                         .toArray(Transition[]::new)[0].getFinalState();
 
                 // New tuple with found transition states.
                 StateTuple newTuple = new StateTuple(m1TransState, m2TransState);
 
-                // Checks if transition state of m1's origin state is within m1's accept state set.
-                boolean m1TransSIsAcceptState =
-                        Arrays.stream(m1.acceptStates).anyMatch(s -> s.equals(m1TransState));
+                // Resultant state type from transition on m1.
+                int m1TransStateType = getStateType(m1TransState, m1);
 
-                // Checks if transition state of m2's origin state is within m2's accept state set.
-                boolean m2TransSIsAcceptState =
-                        Arrays.stream(m2.acceptStates).anyMatch(s -> s.equals(m2TransState));
+                // Resultant state type from transition on m2.
+                int m2TransStateType = getStateType(m2TransState, m2);
 
                 // Checks whether both transition states are accept states or not.
-                if ((m1TransSIsAcceptState && m2TransSIsAcceptState)
-                        || (!m1TransSIsAcceptState && !m2TransSIsAcceptState)) {
+                if ((m1TransStateType != NOT_FOUND_IN_DFA && m2TransStateType != NOT_FOUND_IN_DFA)
+                        && (m1TransStateType == m2TransStateType)) {
 
                     boolean evaluatedTuple = false;
 
                     // Checks if the new tuple has already been evaluated.
                     for (StateTuple tuple : closedSet)
-                        evaluatedTuple =
-                                evaluatedTuple || (tuple.getLeftState() == newTuple.getLeftState()
-                                        && tuple.getRightState() == newTuple.getRightState());
+                        evaluatedTuple = evaluatedTuple || (tuple.getLeftState() == newTuple.getLeftState()
+                                && tuple.getRightState() == newTuple.getRightState());
 
                     // Or if its already in the openSet (to be evaluated).
                     for (StateTuple tuple : openSet)
-                        evaluatedTuple =
-                                evaluatedTuple || (tuple.getLeftState() == newTuple.getLeftState()
-                                        && tuple.getRightState() == newTuple.getRightState());
+                        evaluatedTuple = evaluatedTuple || (tuple.getLeftState() == newTuple.getLeftState()
+                                && tuple.getRightState() == newTuple.getRightState());
 
                     // Adds tuple to the table row.
                     tableRow[i + 1] = newTuple;
@@ -182,6 +183,24 @@ public class DFA {
         }
 
         return mooreTable;
+    }
+
+    // public static DFA simplify(DFA originalDFA){
+
+    // }
+
+    // Returns the type of a given state based on a given DFA.
+    public static int getStateType(String state, DFA containerDFA) {
+
+        boolean doesDFAContainsGivenState = Arrays.stream(containerDFA.states).anyMatch(s -> s.equals(state));
+
+        if (doesDFAContainsGivenState) {
+            boolean isAcceptState = Arrays.stream(containerDFA.acceptStates).anyMatch(s -> s.equals(state));
+            return isAcceptState ? ACCEPT_STATE : NON_ACCEPT_STATE;
+        } else {
+            return NOT_FOUND_IN_DFA;
+        }
+
     }
 
     // GETTERS +++
