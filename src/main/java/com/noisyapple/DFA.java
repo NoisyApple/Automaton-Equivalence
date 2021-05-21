@@ -192,46 +192,80 @@ public class DFA implements Cloneable {
     }
 
     public static void simplify(DFA originalDFA) {
-        try {
-            DFA copyDFA = (DFA) originalDFA.clone();
-            String[] commonStates = Arrays.stream(copyDFA.states).toArray(String[]::new);
+        String[] commonStates = Arrays.stream(originalDFA.states).toArray(String[]::new);
 
-            ArrayList<StateTuple> closedSet = new ArrayList<StateTuple>();
+        ArrayList<StateTuple> closedSet = new ArrayList<StateTuple>();
+        ArrayList<StateTuple> equivalentStates = new ArrayList<StateTuple>();
 
-            Arrays.stream(commonStates).forEach(m1q0 -> {
-                Arrays.stream(commonStates).forEach(m2q0 -> {
+        Arrays.stream(commonStates).forEach(m1q0 -> {
+            Arrays.stream(commonStates).forEach(m2q0 -> {
 
-                    StateTuple initialStates = new StateTuple(m1q0, m2q0);
+                StateTuple initialStates = new StateTuple(m1q0, m2q0);
 
-                    // Will only evaluate those states which:
-                    // - Has not been evaluated yet (not taking in count the order of the states in
-                    // the tuple). {A, B} = {B, A}
-                    // - Has different identifiers. {A, B}, {E, G}
-                    // - Are compatible. {A, B} being A and B both accept states or both non accept
-                    // states.
-                    if (!isTupleInSet(initialStates, closedSet) && (m1q0 != m2q0)
-                            && (getStateType(m1q0, originalDFA) == getStateType(m2q0, originalDFA))) {
-                        System.out.println(m1q0 + " <---> " + m2q0);
+                // Will only evaluate those states which:
+                // - Has not been evaluated yet (not taking in count the order of the states in
+                // the tuple). {A, B} = {B, A}
+                // - Has different identifiers. {A, B}, {E, G}
+                // - Are compatible. {A, B} being A and B both accept states or both non accept
+                // states.
+                if (!isTupleInSet(initialStates, closedSet) && (m1q0 != m2q0)
+                        && (getStateType(m1q0, originalDFA) == getStateType(m2q0, originalDFA))) {
+                    try {
+                        DFA m1 = (DFA) originalDFA.clone();
+                        m1.startS = m1q0;
+                        DFA m2 = (DFA) originalDFA.clone();
+                        m2.startS = m2q0;
+
+                        // If both DFA with the new initial states are equivalent then those states will
+                        // be added to the equivalentStates set.
+                        if (areEquivalent(m1, m2)) {
+                            equivalentStates.add(new StateTuple(m1q0, m2q0));
+                        }
+
+                        // After evaluated initial states will be added to closedSet so that they won't
+                        // be evaluated again.
                         closedSet.add(initialStates);
+
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
                     }
-                });
+
+                }
             });
+        });
 
-            // commonStates[0] = "Z";
+        // Now having all the tuples of equivalent states those are adjusted.
+        equivalentStates.stream().forEach(t -> {
+            originalDFA.adjustEquivalentStates(t);
+        });
+    }
 
-            // copyDFA.states = new String[] { "A", "B", "C" };
-            // copyDFA.alphabet = "xy";
-            // copyDFA.startS = "A";
-            // copyDFA.transitions = new Transition[] { new Transition("r0", 'a', "r0"), new
-            // Transition("r0", 'b', "r1"),
-            // new Transition("r1", 'a', "r1"), new Transition("r1", 'b', "r1") };
-            // copyDFA.acceptStates = new String[] { "A", "C" };
+    public void adjustEquivalentStates(StateTuple tuple) {
 
-            // System.out.println(originalDFA.toString());
-            // System.out.println(copyDFA.toString());
-            // System.out.println(Arrays.toString(commonStates));
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+        String stateToKeep = tuple.getLeftState();
+        String stateToRemove = tuple.getRightState();
+
+        boolean leftStateStillExists = Arrays.stream(states).anyMatch(s -> s == stateToKeep);
+        boolean rightStateStillExists = Arrays.stream(states).anyMatch(s -> s == stateToRemove);
+
+        if (leftStateStillExists && rightStateStillExists) {
+            // Removes tuple's right state from DFA states set and accept states set.
+            states = Arrays.stream(states).filter(s -> s != stateToRemove).toArray(String[]::new);
+            acceptStates = Arrays.stream(acceptStates).filter(s -> s != stateToRemove).toArray(String[]::new);
+
+            // Replaces transition with final state same as tuple's right state for tuple's
+            // left state.
+            transitions = Arrays.stream(transitions).map(t -> {
+                if (t.getFinalState() == stateToRemove) {
+                    return new Transition(t.getOriginState(), t.getTransitionValue(), stateToKeep);
+                } else {
+                    return t;
+                }
+            }).toArray(Transition[]::new);
+
+            // Removes all transitions that has tuple's right state as origin state.
+            transitions = Arrays.stream(transitions).filter(t -> t.getOriginState() != stateToRemove)
+                    .toArray(Transition[]::new);
         }
     }
 

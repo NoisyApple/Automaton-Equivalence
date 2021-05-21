@@ -1,7 +1,7 @@
 package com.noisyapple;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+// import java.util.ArrayList;
+// import java.util.Arrays;
 
 public class App {
 
@@ -114,6 +114,33 @@ public class App {
         // DFA M_1 = new DFA(Q_1, alphabet, q0__1, trans__1, F_1); // (0+1)*10
 
         // DFA.simplify(M_1);
+
+        // System.out.println(M_1.toString());
+
+        // String alphabet = "01"; // Sigma.
+
+        // String[] Q_1 = { "A", "B", "C", "D", "E", "F", "G", "H", "I" }; // Q.
+        // String q0__1 = "A"; // q0.
+        // Transition[] trans__1 = { new Transition("A", '0', "B"), new Transition("A",
+        // '1', "E"),
+        // new Transition("B", '0', "C"), new Transition("B", '1', "F"), new
+        // Transition("C", '0', "D"),
+        // new Transition("C", '1', "H"), new Transition("D", '0', "E"), new
+        // Transition("D", '1', "H"),
+        // new Transition("E", '0', "F"), new Transition("E", '1', "I"), new
+        // Transition("F", '0', "G"),
+        // new Transition("F", '1', "B"), new Transition("G", '0', "H"), new
+        // Transition("G", '1', "B"),
+        // new Transition("H", '0', "I"), new Transition("H", '1', "C"), new
+        // Transition("I", '0', "A"),
+        // new Transition("I", '1', "E"), }; // Delta.
+        // String[] F_1 = { "C", "F", "I" }; // F.
+
+        // DFA M_1 = new DFA(Q_1, alphabet, q0__1, trans__1, F_1); // (0+1)*10
+
+        // DFA.simplify(M_1);
+
+        // System.out.println(M_1.toString());
 
     }
 
