@@ -71,7 +71,7 @@ public class App {
 
         String[] Q_2 = { "r0", "r1" }; // Q.
         String q0__2 = "r0"; // q0.
-        Transition[] trans__2 = { new Transition("r0", 'a', "r0"), new Transition("r0", 'b', "r1"),
+        Transition[] trans__2 = { new Transition("r0", 'a', "r"), new Transition("r0", 'b', "r1"),
                 new Transition("r1", 'a', "r1"), new Transition("r1", 'b', "r1") }; // Delta.
         String[] F_2 = { "r0" }; // F.
 

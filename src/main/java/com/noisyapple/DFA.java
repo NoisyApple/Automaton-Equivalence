@@ -128,16 +128,12 @@ public class DFA {
                 String m1State = lastTuple.getLeftState(); // State from m1.
 
                 // Transition state from origin state (m1State) with actual alphabet symbol.
-                String m1TransState = Arrays.stream(m1.transitions)
-                        .filter(t -> t.getOriginState() == m1State && t.getTransitionValue() == alphabet.charAt(index))
-                        .toArray(Transition[]::new)[0].getFinalState();
+                String m1TransState = getTransitionResultState(m1State, alphabet.charAt(index), m1);
 
                 String m2State = lastTuple.getRightState(); // State from m2.
 
                 // Transition state from origin state (m2State) with actual alphabet symbol.
-                String m2TransState = Arrays.stream(m2.transitions)
-                        .filter(t -> t.getOriginState() == m2State && t.getTransitionValue() == alphabet.charAt(index))
-                        .toArray(Transition[]::new)[0].getFinalState();
+                String m2TransState = getTransitionResultState(m2State, alphabet.charAt(index), m2);
 
                 // New tuple with found transition states.
                 StateTuple newTuple = new StateTuple(m1TransState, m2TransState);
@@ -200,6 +196,23 @@ public class DFA {
         } else {
             return NOT_FOUND_IN_DFA;
         }
+
+    }
+
+    // Returns the result state for the given transition data.
+    public static String getTransitionResultState(String originState, char symbol, DFA containerDFA) {
+
+        String resultState = "";
+
+        try {
+            resultState = Arrays.stream(containerDFA.transitions)
+                    .filter(t -> t.getOriginState() == originState && t.getTransitionValue() == symbol)
+                    .toArray(Transition[]::new)[0].getFinalState();
+        } catch (Exception e) {
+            resultState = "null";
+        }
+
+        return resultState;
 
     }
 
