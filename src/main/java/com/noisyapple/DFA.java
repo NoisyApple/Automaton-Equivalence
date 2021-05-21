@@ -110,6 +110,11 @@ public class DFA {
 
         mooreTable.add(tableHeader);
 
+        // Checks wether both initial states are compatible or not.
+        if (getStateType(m1.startS, m1) != getStateType(m2.startS, m2)) {
+            return new ArrayList<StateTuple[]>(); // Empty table (not equivalent).
+        }
+
         // First tuple (initial states) is added to both sets.
         closedSet.push(new StateTuple(m1.startS, m2.startS));
         openSet.add(new StateTuple(m1.startS, m2.startS));
