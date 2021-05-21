@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
-public class DFA {
+public class DFA implements Cloneable {
 
     public static int NON_ACCEPT_STATE = 0;
     public static int ACCEPT_STATE = 1;
@@ -186,9 +186,59 @@ public class DFA {
         return mooreTable;
     }
 
-    // public static DFA simplify(DFA originalDFA){
+    public static void simplify(DFA originalDFA) {
+        try {
+            DFA copyDFA = (DFA) originalDFA.clone();
+            String[] commonStates = Arrays.stream(copyDFA.states).toArray(String[]::new);
 
-    // }
+            ArrayList<StateTuple> closedSet = new ArrayList<StateTuple>();
+
+            Arrays.stream(commonStates).forEach(m1q0 -> {
+                Arrays.stream(commonStates).forEach(m2q0 -> {
+
+                    StateTuple initialStates = new StateTuple(m1q0, m2q0);
+
+                    // Will only evaluate those states which:
+                    // - Has not been evaluated yet (not taking in count the order of the states in
+                    // the tuple). {A, B} = {B, A}
+                    // - Has different identifiers. {A, B}, {E, G}
+                    // - Are compatible. {A, B} being A and B both accept states or both non accept
+                    // states.
+                    if (!isTupleInSet(initialStates, closedSet) && (m1q0 != m2q0)
+                            && (getStateType(m1q0, originalDFA) == getStateType(m2q0, originalDFA))) {
+                        System.out.println(m1q0 + " <---> " + m2q0);
+                        closedSet.add(initialStates);
+                    }
+                });
+            });
+
+            // commonStates[0] = "Z";
+
+            // copyDFA.states = new String[] { "A", "B", "C" };
+            // copyDFA.alphabet = "xy";
+            // copyDFA.startS = "A";
+            // copyDFA.transitions = new Transition[] { new Transition("r0", 'a', "r0"), new
+            // Transition("r0", 'b', "r1"),
+            // new Transition("r1", 'a', "r1"), new Transition("r1", 'b', "r1") };
+            // copyDFA.acceptStates = new String[] { "A", "C" };
+
+            // System.out.println(originalDFA.toString());
+            // System.out.println(copyDFA.toString());
+            // System.out.println(Arrays.toString(commonStates));
+        } catch (CloneNotSupportedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isTupleInSet(StateTuple tuple, ArrayList<StateTuple> set) {
+
+        return set.stream().anyMatch(t -> {
+            return (t.getLeftState() == tuple.getLeftState() && t.getRightState() == tuple.getRightState())
+                    || (t.getLeftState() == tuple.getRightState() && t.getRightState() == tuple.getLeftState());
+        });
+
+    }
 
     // Returns the type of a given state based on a given DFA.
     public static int getStateType(String state, DFA containerDFA) {
@@ -219,6 +269,13 @@ public class DFA {
 
         return resultState;
 
+    }
+
+    // INTERFACE IMPLEMENTATIONS
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+
+        return (DFA) super.clone();
     }
 
     // GETTERS +++
