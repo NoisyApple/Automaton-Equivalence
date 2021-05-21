@@ -83,28 +83,37 @@ public class App {
         // System.out.println(M_1.toString());
         // System.out.println(M_2.toString());
 
-        // ArrayList<StateTuple[]> data2 = DFA.areEquivalent(M_1, M_2);
+        // ArrayList<StateTuple[]> data2 = DFA.getMooreTable(M_1, M_2);
 
         // for (StateTuple[] row : data2) {
         // System.out.println(Arrays.toString(row));
         // }
 
-        String alphabet = "ab"; // Sigma.
+        // System.out.println(DFA.areEquivalent(M_1, M_2));
 
-        String[] Q_1 = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" }; // Q.
-        String q0__1 = "A"; // q0.
-        Transition[] trans__1 = { new Transition("A", 'a', "B"), new Transition("A", 'b', "C"),
-                new Transition("B", 'a', "D"), new Transition("B", 'b', "E"), new Transition("C", 'a', "A"),
-                new Transition("C", 'b', "B"), new Transition("D", 'a', "C"), new Transition("D", 'b', "F"),
-                new Transition("E", 'a', "G"), new Transition("E", 'b', "H"), new Transition("F", 'a', "H"),
-                new Transition("F", 'b', "B"), new Transition("G", 'a', "I"), new Transition("G", 'b', "I"),
-                new Transition("H", 'a', "J"), new Transition("H", 'b', "F"), new Transition("I", 'a', "H"),
-                new Transition("I", 'b', "J"), new Transition("J", 'a', "G"), new Transition("J", 'b', "E"), }; // Delta.
-        String[] F_1 = { "E", "G", "D" }; // F.
+        // String alphabet = "ab"; // Sigma.
 
-        DFA M_1 = new DFA(Q_1, alphabet, q0__1, trans__1, F_1); // (0+1)*10
+        // String[] Q_1 = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" }; // Q.
+        // String q0__1 = "A"; // q0.
+        // Transition[] trans__1 = { new Transition("A", 'a', "B"), new Transition("A",
+        // 'b', "C"),
+        // new Transition("B", 'a', "D"), new Transition("B", 'b', "E"), new
+        // Transition("C", 'a', "A"),
+        // new Transition("C", 'b', "B"), new Transition("D", 'a', "C"), new
+        // Transition("D", 'b', "F"),
+        // new Transition("E", 'a', "G"), new Transition("E", 'b', "H"), new
+        // Transition("F", 'a', "H"),
+        // new Transition("F", 'b', "B"), new Transition("G", 'a', "I"), new
+        // Transition("G", 'b', "I"),
+        // new Transition("H", 'a', "J"), new Transition("H", 'b', "F"), new
+        // Transition("I", 'a', "H"),
+        // new Transition("I", 'b', "J"), new Transition("J", 'a', "G"), new
+        // Transition("J", 'b', "E"), }; // Delta.
+        // String[] F_1 = { "E", "G", "D" }; // F.
 
-        DFA.simplify(M_1);
+        // DFA M_1 = new DFA(Q_1, alphabet, q0__1, trans__1, F_1); // (0+1)*10
+
+        // DFA.simplify(M_1);
 
     }
 

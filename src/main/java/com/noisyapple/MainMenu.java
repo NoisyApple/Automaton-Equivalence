@@ -133,7 +133,7 @@ public class MainMenu extends JFrame {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    new MooreTable(DFA.areEquivalent(m1, m2));
+                    new MooreTable(DFA.getMooreTable(m1, m2));
                 } catch (Exception error) {
                     JOptionPane.showMessageDialog(null,
                             "<html><span style='color: #d02d3d; font-size: 14px'>M1 and M2 are not equivalent :(</span><html>",

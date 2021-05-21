@@ -89,7 +89,7 @@ public class DFA implements Cloneable {
         return data;
     }
 
-    public static ArrayList<StateTuple[]> areEquivalent(DFA m1, DFA m2) {
+    public static ArrayList<StateTuple[]> getMooreTable(DFA m1, DFA m2) {
 
         ArrayList<StateTuple[]> mooreTable = new ArrayList<StateTuple[]>(); // Visualizable data.
         Stack<StateTuple> closedSet = new Stack<StateTuple>(); // Valid tuples.
@@ -186,6 +186,11 @@ public class DFA implements Cloneable {
         return mooreTable;
     }
 
+    public static boolean areEquivalent(DFA m1, DFA m2) {
+        ArrayList<StateTuple[]> mooreTable = getMooreTable(m1, m2);
+        return !mooreTable.isEmpty();
+    }
+
     public static void simplify(DFA originalDFA) {
         try {
             DFA copyDFA = (DFA) originalDFA.clone();
@@ -226,11 +231,12 @@ public class DFA implements Cloneable {
             // System.out.println(copyDFA.toString());
             // System.out.println(Arrays.toString(commonStates));
         } catch (CloneNotSupportedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
+    // Returns wether the given tuple is within the given set or not even though
+    // it's order is inverted
     public static boolean isTupleInSet(StateTuple tuple, ArrayList<StateTuple> set) {
 
         return set.stream().anyMatch(t -> {
