@@ -7,7 +7,7 @@ public class App {
 
     public static void main(String[] args) {
 
-        // new MainMenu();
+        new MainMenu();
 
         // String[] cases = {"10", "010110", "", "01"};
 

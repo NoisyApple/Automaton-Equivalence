@@ -22,8 +22,9 @@ public class MainMenu extends JFrame {
 
     // Graphic attributes.
     private JPanel mainPanel, alphabetPanel, m1Panel, m2Panel, m1StatesPanel, m2StatesPanel, m1TransitionsPanel,
-            m2TransitionsPanel, bottomPanel;
-    private JButton btnAlphabet, btnM1States, btnM2States, btnM1Transitions, btnM2Transitions, btnCompare, btnReset;
+            m2TransitionsPanel, m1SimplifyPanel, m2SimplifyPanel, bottomPanel;
+    private JButton btnAlphabet, btnM1States, btnM2States, btnM1Transitions, btnM2Transitions, btnM1Simplify,
+            btnM2Simplify, btnCompare, btnReset;
     private JLabel lblAlphabet, lblM1States, lblM2States, lblM1Transitions, lblM2Transitions;
 
     public MainMenu() {
@@ -52,6 +53,12 @@ public class MainMenu extends JFrame {
         m2TransitionsPanel = new JPanel();
         btnM2Transitions = new JButton("TRANSITIONS");
         lblM2Transitions = new JLabel();
+
+        m1SimplifyPanel = new JPanel();
+        btnM1Simplify = new JButton("SIMPLIFY");
+
+        m2SimplifyPanel = new JPanel();
+        btnM2Simplify = new JButton("SIMPLIFY");
 
         bottomPanel = new JPanel();
         btnCompare = new JButton("COMPARE");
@@ -128,6 +135,36 @@ public class MainMenu extends JFrame {
         });
         // TRANSITION BUTTON CLICK EVENT ---
 
+        // SIMPLIFY BUTTON CLICK EVENT +++
+        btnM1Simplify.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                if (m1.getStates().length > 0 && m1.getAlphabet().length() > 0 && m1.getStartS().length() > 0
+                        && m1.getTransitions().length > 0 && m1.getAcceptStates().length > 0) {
+                    DFA.simplify(m1);
+                    JOptionPane.showMessageDialog(null,
+                            "<html><span style='color: #18519A; font-size: 18px'>M1 Has been simplified! :)</span><html>",
+                            "ADF Simplified!", JOptionPane.PLAIN_MESSAGE);
+                }
+
+            }
+        });
+
+        btnM2Simplify.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                if (m2.getStates().length > 0 && m2.getAlphabet().length() > 0 && m2.getStartS().length() > 0
+                        && m2.getTransitions().length > 0 && m2.getAcceptStates().length > 0) {
+                    DFA.simplify(m2);
+                    JOptionPane.showMessageDialog(null,
+                            "<html><span style='color: #18519A; font-size: 18px'>M1 Has been simplified! :)</span><html>",
+                            "ADF Simplified!", JOptionPane.PLAIN_MESSAGE);
+                }
+
+            }
+        });
+        // SIMPLIFY BUTTON CLICK EVENT ---
+
         // COMPARE BUTTON CLICK EVENT +++
         btnCompare.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -136,8 +173,8 @@ public class MainMenu extends JFrame {
                     new MooreTable(DFA.getMooreTable(m1, m2));
                 } catch (Exception error) {
                     JOptionPane.showMessageDialog(null,
-                            "<html><span style='color: #d02d3d; font-size: 14px'>M1 and M2 are not equivalent :(</span><html>",
-                            "Not equivalent", JOptionPane.PLAIN_MESSAGE);
+                            "<html><span style='color: #18519A; font-size: 18px'>M1 Has been simplified! :)</span><html>",
+                            "ADF Simplified!", JOptionPane.PLAIN_MESSAGE);
                 }
 
             }
@@ -196,6 +233,10 @@ public class MainMenu extends JFrame {
         m2TransitionsPanel.add(btnM2Transitions);
         m2TransitionsPanel.add(lblM2Transitions);
 
+        m1SimplifyPanel.add(btnM1Simplify);
+
+        m2SimplifyPanel.add(btnM2Simplify);
+
         bottomPanel.add(btnCompare);
         bottomPanel.add(btnReset);
 
@@ -204,6 +245,9 @@ public class MainMenu extends JFrame {
 
         m1Panel.add(m1TransitionsPanel);
         m2Panel.add(m2TransitionsPanel);
+
+        m1Panel.add(m1SimplifyPanel);
+        m2Panel.add(m2SimplifyPanel);
 
         mainPanel.add(alphabetPanel, BorderLayout.NORTH);
         mainPanel.add(m1Panel, BorderLayout.WEST);
