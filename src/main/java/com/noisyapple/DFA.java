@@ -188,6 +188,12 @@ public class DFA implements Cloneable {
 
     public static boolean areEquivalent(DFA m1, DFA m2) {
         ArrayList<StateTuple[]> mooreTable = getMooreTable(m1, m2);
+        if (!mooreTable.isEmpty()) {
+            for (StateTuple[] row : mooreTable) {
+                System.out.println(Arrays.toString(row));
+            }
+        }
+        System.out.println();
         return !mooreTable.isEmpty();
     }
 
@@ -266,6 +272,9 @@ public class DFA implements Cloneable {
             // Removes all transitions that has tuple's right state as origin state.
             transitions = Arrays.stream(transitions).filter(t -> t.getOriginState() != stateToRemove)
                     .toArray(Transition[]::new);
+
+            System.out.println(this.toString());
+
         }
     }
 
